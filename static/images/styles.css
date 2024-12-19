@@ -1,0 +1,160 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Body with Background */
+body {
+    background: url('background.webp') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
+/* Banner Section */
+.banner {
+    width: 100%;
+    height: 25vh; /* Takes a quarter of the viewport */
+    overflow: hidden;
+    position: relative;
+}
+
+.banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Logo Positioned Below the Banner */
+.logo-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: white;
+    border: 4px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: -75px auto 20px; /* Overlaps banner and box */
+    z-index: 10;
+    overflow: hidden;
+}
+
+.logo-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Main Container */
+.upload-container {
+    background: white;
+    border: 1px solid #ddd;
+    width: 90%;
+    max-width: 600px;
+    padding: 40px 20px;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Upload Section */
+.upload-area {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    gap: 15px; /* Space between items */
+    margin-top: 20px; /* Adds spacing from top content */
+}
+
+/* Loading Image */
+.upload-area img.drag-icon {
+    width: 100px; /* Adjust size */
+    height: auto;
+    margin-bottom: 10px;
+}
+
+/* Buttons Styling */
+.upload-area button {
+    background-color: #00CFCF;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px; /* Consistent width */
+    text-align: center;
+}
+
+.upload-area button:hover {
+    background-color: #00b2b2;
+}
+
+/* Icons Section */
+.icons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    position: relative;
+}
+
+.icons .icon {
+    width: 80px; /* Larger icons */
+}
+
+.icons .left {
+    width: 100px;
+    height: 100px;
+    transform: translateY(-50%) rotate(-45deg); /* Rotate */
+    position: absolute;
+    bottom: 45px;
+    left: 0;
+}
+
+.icons .right {
+    width: 100px;
+    height: 100px;
+    transform: translateY(-50%) rotate(45deg); /* Rotate */
+    position: absolute;
+    bottom: 45px;
+    right: 0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .upload-container {
+        width: 95%;
+        padding: 30px 15px;
+    }
+
+    .logo-circle {
+        width: 120px;
+        height: 120px;
+        margin: -60px auto 10px;
+    }
+
+    .upload-area img.drag-icon {
+        width: 80px;
+    }
+
+    .upload-area button {
+        width: 180px;
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    .icons .icon {
+        width: 60px;
+        height: 60px;
+    }
+}

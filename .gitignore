@@ -1,0 +1,5 @@
+/conv
+/results
+/uploads
+*.traineddata
+/temp

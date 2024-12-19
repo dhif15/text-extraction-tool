@@ -1,0 +1,15 @@
+Flask
+gunicorn
+pdf2image
+pytesseract
+python-docx
+Pillow
+pywin32
+ebooklib
+fpdf
+beautifulsoup4
+reportlab
+requests
+setuptools
+wheel
+fitz==0.0.1.dev2
