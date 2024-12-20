@@ -11,4 +11,5 @@ reportlab
 requests
 setuptools
 wheel
+PyPDF2
 fitz==0.0.1.dev2
