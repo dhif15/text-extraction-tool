@@ -25,11 +25,48 @@ app.secret_key = "secret_key"
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 
+# def convert_word_to_pdf(input_word_path, output_folder):
+#     """Convert Word document to PDF using LibreOffice CLI."""
+#     # libreoffice_path = r"C:\Program Files\LibreOffice\program\soffice.exe" if os.name == 'nt' else "libreoffice"
+#     libreoffice_path = "/app/.apt/usr/bin/soffice" if os.name != 'nt' else "C:\\Program Files\\LibreOffice\\program\\soffice.exe"
+    
+
+#     try:
+#         subprocess.run([
+#             libreoffice_path,
+#             "--headless",
+#             "--convert-to", "pdf",
+#             "--outdir", output_folder,
+#             input_word_path
+#         ], check=True)
+#         # استخراج اسم ملف PDF الناتج
+#         base_name = os.path.splitext(os.path.basename(input_word_path))[0]
+#         return os.path.join(output_folder, f"{base_name}.pdf")
+#     except subprocess.CalledProcessError as e:
+#         logging.error(f"Error converting Word to PDF: {e}")
+#         raise RuntimeError(f"Error converting Word to PDF: {e}")
+
+# def convert_word_to_pdf(input_word_path, output_folder):
+#     """Convert Word document to PDF using LibreOffice CLI."""
+#     libreoffice_path = "/app/vendor/libreoffice/opt/libreoffice7.3/program/soffice" if os.name != 'nt' else "C:\\Program Files\\LibreOffice\\program\\soffice.exe"
+#     try:
+#         subprocess.run([
+#             libreoffice_path,
+#             "--headless",
+#             "--convert-to", "pdf",
+#             "--outdir", output_folder,
+#             input_word_path
+#         ], check=True)
+#         # استخراج اسم ملف PDF الناتج
+#         base_name = os.path.splitext(os.path.basename(input_word_path))[0]
+#         return os.path.join(output_folder, f"{base_name}.pdf")
+#     except subprocess.CalledProcessError as e:
+#         logging.error(f"Error converting Word to PDF: {e}")
+#         raise RuntimeError(f"Error converting Word to PDF: {e}")
+
 def convert_word_to_pdf(input_word_path, output_folder):
     """Convert Word document to PDF using LibreOffice CLI."""
-    # libreoffice_path = r"C:\Program Files\LibreOffice\program\soffice.exe" if os.name == 'nt' else "libreoffice"
-    libreoffice_path = "/app/.apt/usr/bin/soffice" if os.name != 'nt' else "C:\\Program Files\\LibreOffice\\program\\soffice.exe"
-
+    libreoffice_path = "/app/vendor/libreoffice/opt/libreoffice7.3/program/soffice" if os.name != 'nt' else "C:\\Program Files\\LibreOffice\\program\\soffice.exe"
     try:
         subprocess.run([
             libreoffice_path,
@@ -44,6 +81,8 @@ def convert_word_to_pdf(input_word_path, output_folder):
     except subprocess.CalledProcessError as e:
         logging.error(f"Error converting Word to PDF: {e}")
         raise RuntimeError(f"Error converting Word to PDF: {e}")
+
+
 
 
 def convert_images_to_pdf(image_paths, output_pdf_path):
