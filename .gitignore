@@ -1,5 +1,6 @@
 /conv
 /results
 /uploads
-*.traineddata
+# Allow ara.traineddata explicitly
+!tessdata/ara.traineddata
 /temp
