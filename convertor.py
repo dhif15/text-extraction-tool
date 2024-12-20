@@ -27,7 +27,9 @@ locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
 def convert_word_to_pdf(input_word_path, output_folder):
     """Convert Word document to PDF using LibreOffice CLI."""
-    libreoffice_path = r"C:\Program Files\LibreOffice\program\soffice.exe" if os.name == 'nt' else "libreoffice"
+    # libreoffice_path = r"C:\Program Files\LibreOffice\program\soffice.exe" if os.name == 'nt' else "libreoffice"
+    libreoffice_path = "/app/.apt/usr/bin/soffice" if os.name != 'nt' else "C:\\Program Files\\LibreOffice\\program\\soffice.exe"
+
     try:
         subprocess.run([
             libreoffice_path,
