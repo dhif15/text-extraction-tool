@@ -1,0 +1,24 @@
+# Ignore compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore temporary files
+*.log
+*.tmp
+*.swp
+*.tar.gz
+*.zip
+
+# Ignore tools and config files
+.vscode/
+.pytest_cache/
+.mypy_cache/
+node_modules/
+
+# Ignore documentation files
+*.md
+*.rst
+
+# Include tessdata directory explicitly
+!tessdata/
