@@ -1,11 +1,12 @@
 import os
 import shutil
 import tempfile
+import subprocess
 from flask import Flask, request, render_template, send_file, redirect, url_for, session, jsonify
 from pdf2image import convert_from_path
 from pytesseract import image_to_string
 from docx import Document
-import win32com.client
+from PyPDF2 import PdfMerger
 import locale
 
 # Flask App Initialization
@@ -20,14 +21,23 @@ def simplify_path(path):
 
 
 def convert_word_to_pdf(input_word_path, output_pdf_path):
-    word = win32com.client.Dispatch("Word.Application")
-    word.Visible = False
+    """Convert Word document to PDF using LibreOffice CLI."""
     try:
-        doc = word.Documents.Open(simplify_path(input_word_path))
-        doc.SaveAs(simplify_path(output_pdf_path), FileFormat=17)
-        doc.Close()
-    finally:
-        word.Quit()
+        subprocess.run([
+            "libreoffice", "--headless", "--convert-to", "pdf", "--outdir",
+            os.path.dirname(output_pdf_path), input_word_path
+        ], check=True)
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"Error converting Word to PDF: {e}")
+
+
+def convert_images_to_pdf(image_paths, output_pdf_path):
+    """Combine multiple images into a single PDF."""
+    merger = PdfMerger()
+    for image_path in image_paths:
+        merger.append(image_path)
+    with open(output_pdf_path, "wb") as f:
+        merger.write(f)
 
 
 def convert_pdf_to_images(input_pdf_path, output_folder, first_page=None, last_page=None):
@@ -53,14 +63,20 @@ def extract_text_from_images(image_paths, language="ara"):
 @app.route("/", methods=["GET", "POST"])
 def upload():
     if request.method == "POST":
-        uploaded_file = request.files.get("file")
-        if not uploaded_file:
-            return jsonify({"error": "No file uploaded"}), 400
+        # Clear previous session data
+        reset_session()
+
+        files = request.files.getlist("file")
+        if not files:
+            return jsonify({"error": "No files uploaded"}), 400
         try:
             temp_folder = tempfile.mkdtemp()
-            file_path = os.path.join(temp_folder, uploaded_file.filename)
-            uploaded_file.save(file_path)
-            session["uploaded_file_path"] = file_path
+            uploaded_paths = []
+            for file in files:
+                file_path = os.path.join(temp_folder, file.filename)
+                file.save(file_path)
+                uploaded_paths.append(file_path)
+            session["uploaded_file_paths"] = uploaded_paths
             return jsonify({"redirect": url_for("process")}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
@@ -69,21 +85,29 @@ def upload():
 
 @app.route("/process", methods=["GET"])
 def process():
-    file_path = session.get("uploaded_file_path")
-    if not file_path or not os.path.exists(file_path):
-        return "File not found", 404
+    file_paths = session.get("uploaded_file_paths")
+    if not file_paths or not all(os.path.exists(path) for path in file_paths):
+        return "Files not found", 404
 
     result_docx_path = session.get("result_docx")
     if not result_docx_path:
         try:
             output_folder = tempfile.mkdtemp()
-            if file_path.endswith(".pdf"):
+            combined_pdf_path = os.path.join(output_folder, "combined.pdf")
+
+            if len(file_paths) > 1 and all(path.lower().endswith((".png", ".jpg", ".jpeg")) for path in file_paths):
+                # Combine images into a single PDF
+                convert_images_to_pdf(file_paths, combined_pdf_path)
+                image_paths = convert_pdf_to_images(combined_pdf_path, output_folder)
+            elif file_paths[0].endswith(".pdf"):
                 # Process all pages of the PDF
-                image_paths = convert_pdf_to_images(file_path, output_folder)
-            else:
+                image_paths = convert_pdf_to_images(file_paths[0], output_folder)
+            elif file_paths[0].endswith(".docx"):
                 pdf_path = os.path.join(output_folder, "temp.pdf")
-                convert_word_to_pdf(file_path, pdf_path)
+                convert_word_to_pdf(file_paths[0], pdf_path)
                 image_paths = convert_pdf_to_images(pdf_path, output_folder)
+            else:
+                return "Unsupported file type.", 400
 
             extracted_text = extract_text_from_images(image_paths)
             result_docx_path = os.path.join(output_folder, "extracted_text.docx")
@@ -115,16 +139,21 @@ def download_result():
 @app.route("/reset")
 def reset():
     """Clear session data and reset the application."""
-    file_path = session.pop("uploaded_file_path", None)
+    reset_session()
+    return redirect(url_for("upload"))
+
+
+def reset_session():
+    """Helper function to clear session data and delete temporary files."""
+    file_paths = session.pop("uploaded_file_paths", [])
     result_docx = session.pop("result_docx", None)
 
-    if file_path and os.path.exists(file_path):
-        shutil.rmtree(os.path.dirname(file_path), ignore_errors=True)
+    for file_path in file_paths:
+        if file_path and os.path.exists(file_path):
+            shutil.rmtree(os.path.dirname(file_path), ignore_errors=True)
 
     if result_docx and os.path.exists(result_docx):
         shutil.rmtree(os.path.dirname(result_docx), ignore_errors=True)
-
-    return redirect(url_for("upload"))
 
 
 if __name__ == "__main__":
