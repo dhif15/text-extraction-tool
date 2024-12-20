@@ -8,6 +8,11 @@ from pytesseract import image_to_string
 from docx import Document
 from PyPDF2 import PdfMerger
 import locale
+import pytesseract
+
+# Set up Tesseract and tessdata paths for Heroku
+pytesseract.pytesseract.tesseract_cmd = "/app/.apt/usr/bin/tesseract"  # Path to Tesseract in Heroku
+os.environ["TESSDATA_PREFIX"] = "/app/tessdata"  # Path to the tessdata directory
 
 # Flask App Initialization
 app = Flask(__name__)
