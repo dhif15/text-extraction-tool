@@ -41,12 +41,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    margin: -75px auto 20px;
-    z-index: 10;
+    position: absolute; /* استخدم position: absolute لضبط الشعار */
+    top: 20%; /* اضبط الموقع حسب الحاجة */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10; /* تأكد من أن الشعار فوق المكونات الأخرى */
     overflow: hidden;
 }
-
 .logo-circle img {
     width: 100%;
     height: 100%;
@@ -62,22 +63,23 @@ body {
     padding: 40px 20px;
     border-radius: 8px;
     text-align: center;
-    position: relative;
-    z-index: 1;
+    position: relative; /* لإبقاء المربع الأبيض في مكانه */
+    margin-top: 50px; /* لتفادي تغطية الشعار */
+    z-index: 5; /* تأكد من أن المربع الأبيض يظهر */
 }
 
 /* Upload Area (Icon and Buttons as Stack) */
 .upload-area {
-    display: flex;               /* Enables flexbox */
-    flex-direction: column;      /* Stacks children vertically */
-    align-items: center;         /* Centers items horizontally */
-    justify-content: center;     /* Centers items vertically */
-    gap: 15px;                   /* Adds spacing between elements */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
 }
 
 .upload-area img.drag-icon {
     width: 60px;
-    margin-bottom: 0;            /* Remove bottom margin */
+    margin-bottom: 0;
 }
 
 .upload-area p {
@@ -95,7 +97,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     width: 200px;
-    margin: 0;                   /* Remove margin */
+    margin: 0;
 }
 
 .upload-area button:hover {
@@ -128,6 +130,19 @@ body {
     right: 0;
 }
 
+/* Loading Icon */
+.loading-icon {
+    width: 80px;
+    height: 80px;
+}
+
+/* Processing Text */
+.processing-text {
+    font-size: 18px;
+    color: #333;
+    margin-top: 15px;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
     .upload-container {
@@ -152,5 +167,14 @@ body {
 
     .icons .icon {
         width: 60px;
+    }
+
+    .loading-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .processing-text {
+        font-size: 16px;
     }
 }
