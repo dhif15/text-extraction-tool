@@ -22,7 +22,8 @@ os.environ["TESSDATA_PREFIX"] = os.getenv("TESSDATA_PREFIX", os.path.join(os.get
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
-locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+# locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+locale.setlocale(locale.LC_ALL, "")
 
 
 # def convert_word_to_pdf(input_word_path, output_folder):
