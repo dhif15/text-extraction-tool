@@ -1,1 +1,1 @@
-web: gunicorn convertor:app
+web: ./install_libreoffice.sh && gunicorn convertor:app --timeout 300
